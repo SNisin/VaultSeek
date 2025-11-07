@@ -1,4 +1,4 @@
-# TankSeek File Search
+# VaultSeek File Search
 
 ## License
 

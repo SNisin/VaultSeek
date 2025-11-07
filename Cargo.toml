@@ -1,15 +1,15 @@
 [workspace]
-members = ["crates/tankseek_core", "crates/tankseek_web_ui"]
-default-members = ["crates/tankseek_web_ui"]
+members = ["crates/vaultseek_core", "crates/vaultseek_web_ui"]
+default-members = ["crates/vaultseek_web_ui"]
 resolver = "3"
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-description = "TankSeek File Search — high-performance EFU file search web application"
+description = "VaultSeek File Search — high-performance EFU file search web application"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/SNisin/tankseek-file-search"
+repository = "https://github.com/SNisin/VaultSeek"
 keywords = ["search", "files", "web", "rust", "performance"]
 categories = ["web-programming", "filesystem", "data-structures"]
 rust-version = "1.88"
@@ -44,5 +44,5 @@ lto = false          # Disable LTO for faster compile times
 codegen-units = 16   # More codegen units for faster compile times
 
 [workspace.dependencies]
-tankseek_core = { path = "crates/tankseek_core" }
-tankseek_web_ui = { path = "crates/tankseek_web_ui" }
+vaultseek_core = { path = "crates/vaultseek_core" }
+vaultseek_web_ui = { path = "crates/vaultseek_web_ui" }

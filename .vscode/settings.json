@@ -9,7 +9,7 @@
         "rpath",
         "rustc",
         "serde",
-        "tankseek",
+        "vaultseek",
         "webui"
     ],
     "files.insertFinalNewline": true

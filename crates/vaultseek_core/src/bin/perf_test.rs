@@ -4,16 +4,16 @@ fn main() {
     let start_time = std::time::Instant::now();
     println!("Loading file tree...");
     let tree =
-        tankseek_core::loader::efu::import_efu("filelist.efu").expect("Failed to load file tree");
+        vaultseek_core::loader::efu::import_efu("filelist.efu").expect("Failed to load file tree");
     println!(
         "Loaded {} elements in {:?}",
         tree.len(),
         start_time.elapsed()
     );
-    let searcher = tankseek_core::searcher::Searcher::from_file_tree(tree);
+    let searcher = vaultseek_core::searcher::Searcher::from_file_tree(tree);
     let query = "Brand";
-    let sort_by = Some(tankseek_core::sorter::SortField::Filename);
-    let sort_order = Some(tankseek_core::sorter::SortOrder::Ascending);
+    let sort_by = Some(vaultseek_core::sorter::SortField::Filename);
+    let sort_order = Some(vaultseek_core::sorter::SortOrder::Ascending);
 
     let start_time = std::time::Instant::now();
     let result = searcher.search(query, sort_by, sort_order);

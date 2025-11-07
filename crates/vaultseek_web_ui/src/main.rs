@@ -5,10 +5,10 @@ use serde::{Deserialize, Serialize};
 use std::process::{self};
 use std::sync::Mutex;
 use std::time::Instant;
-use tankseek_core::file_tree;
-use tankseek_core::loader;
-use tankseek_core::searcher;
-use tankseek_core::sorter;
+use vaultseek_core::file_tree;
+use vaultseek_core::loader;
+use vaultseek_core::searcher;
+use vaultseek_core::sorter;
 
 #[derive(Serialize, Deserialize, Clone)]
 struct FileResult {
