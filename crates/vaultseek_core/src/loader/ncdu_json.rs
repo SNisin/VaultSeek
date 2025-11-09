@@ -48,20 +48,6 @@ enum NcduDirectoryEntry {
     Directory(NcduDirectory),
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-struct Record {
-    #[serde(rename = "Filename")]
-    filename: String,
-    #[serde(rename = "Size")]
-    size: Option<i64>,
-    #[serde(rename = "Date Modified")]
-    date_modified: Option<i64>,
-    #[serde(rename = "Date Created")]
-    date_created: Option<i64>,
-    #[serde(rename = "Attributes")]
-    attributes: u32,
-}
-
 fn get_date_modified_from_info(info: &NcduInfoBlock) -> Option<i64> {
     // convert to windows FILETIME (100-nanosecond intervals since January 1, 1601)
     if let Some(mtime) = info.mtime {
@@ -132,9 +118,6 @@ pub fn import_ncdu_json<P: AsRef<Path>>(filepath: P) -> Result<FileTree, Box<dyn
     let estimated_records = (file_size / 100) as usize;
     // List of elements to build the tree structure
     let mut tree: FileTree = FileTree::with_capacity(estimated_records);
-
-    // Create a CSV reader from the file
-    let mut rdr = csv::Reader::from_reader(file_list_reader);
 
     fn add_recursively(
         tree: &mut FileTree,
