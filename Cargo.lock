@@ -1483,6 +1483,7 @@ dependencies = [
  "csv",
  "regex",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

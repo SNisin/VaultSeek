@@ -70,35 +70,40 @@ impl FileTree {
         attributes: u32,
     ) -> usize {
         let mut current_index = 0; // Start from the root
-        for part in path.split(&['\\', '/']) {
-            // println!("Part: {}, current_index: {}", part, current_index);
-            // if part == "tank" { panic!("Debugging"); }
+        let path = path.trim_matches(&['\\', '/'][..]); // Trim leading/trailing slashes
 
-            // Check if the part already exists among the children
-            let found_elem = self.elements[current_index]
-                .children
-                .binary_search_by_key(&part, |&child_index| self.get_filename(child_index));
-            // println!("Found elem: {:?}", found_elem);
-            current_index = match found_elem {
-                Ok(index) => self.elements[current_index].children[index], // Move to the existing child
-                Err(index) => {
-                    // Create a new element
-                    let new_element = Element {
-                        filename: self.new_filename(part),
-                        size: None,
-                        date_modified: None,
-                        date_created: None,
-                        attributes: 0,
-                        parent: current_index,
-                        children: Vec::new(),
-                    };
-                    let child_index = self.add_element(new_element);
-                    self.elements[current_index]
-                        .children
-                        .insert(index, child_index);
-                    child_index
-                }
-            };
+        if !path.is_empty() {
+            // If empty path, we stay at root
+            for part in path.split(&['\\', '/']) {
+                // println!("Part: {}, current_index: {}", part, current_index);
+                // if part == "tank" { panic!("Debugging"); }
+
+                // Check if the part already exists among the children
+                let found_elem = self.elements[current_index]
+                    .children
+                    .binary_search_by_key(&part, |&child_index| self.get_filename(child_index));
+                // println!("Found elem: {:?}", found_elem);
+                current_index = match found_elem {
+                    Ok(index) => self.elements[current_index].children[index], // Move to the existing child
+                    Err(index) => {
+                        // Create a new element
+                        let new_element = Element {
+                            filename: self.new_filename(part),
+                            size: None,
+                            date_modified: None,
+                            date_created: None,
+                            attributes: 0,
+                            parent: current_index,
+                            children: Vec::new(),
+                        };
+                        let child_index = self.add_element(new_element);
+                        self.elements[current_index]
+                            .children
+                            .insert(index, child_index);
+                        child_index
+                    }
+                };
+            }
         }
         // Update the final element with the provided metadata
         let element = self
@@ -176,11 +181,27 @@ impl FileTree {
         children
     }
 
-    pub fn add_child(&mut self, parent: usize, mut child: Element) -> usize {
+    pub fn add_child(
+        &mut self,
+        parent: usize,
+        name: &str,
+        size: Option<i64>,
+        date_modified: Option<i64>,
+        date_created: Option<i64>,
+        attributes: u32,
+    ) -> usize {
         // Add a child element to the specified parent element
         let child_index = self.elements.len();
         self.elements[parent].children.push(child_index);
-        child.parent = parent;
+        let child = Element {
+            filename: self.new_filename(name),
+            size,
+            date_modified,
+            date_created,
+            attributes,
+            parent,
+            children: Vec::new(),
+        };
         self.elements.push(child);
         child_index
     }
