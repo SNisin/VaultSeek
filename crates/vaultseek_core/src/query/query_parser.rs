@@ -409,6 +409,11 @@ fn parse_expression(lexer: &mut lexer::QueryLexer, modifiers: QueryModifiersTrac
                 let left_expr = exprs_to_and(exprs);
                 return QueryExpr::Or(Box::new(left_expr), Box::new(right_expr));
             }
+            lexer::QueryToken::GreaterThan => {
+                // end of block
+                lexer.next_token();
+                break;
+            }
             _ => {
                 exprs.push(parse_condition(lexer, modifiers));
             }
