@@ -1,4 +1,4 @@
-use std::{error::Error, path::Path};
+use std::{error::Error, io::BufReader, path::Path};
 
 use serde::{Deserialize, Serialize, de};
 use serde_json::{Deserializer, Value};
@@ -107,13 +107,12 @@ fn get_attributes(info: &NcduInfoBlock, isdir: bool, filename: &str) -> u32 {
 
 pub fn import_ncdu_json<P: AsRef<Path>>(filepath: P) -> Result<FileTree, Box<dyn Error>> {
     let file_list_reader = std::fs::File::open(filepath)?;
-
-    let data: NcduTopLevel = serde_json::from_reader(&file_list_reader)?;
-
-    println!("Major: {}, Minor: {}, Metadata: {}", data.0, data.1, data.2);
-
     // Estimate the number of records in the file
     let file_size = file_list_reader.metadata()?.len();
+    
+    let file_list_buf_reader = BufReader::new(file_list_reader);
+    let data: NcduTopLevel = serde_json::from_reader(file_list_buf_reader)?;
+
     // Assuming an average record size of 100 bytes, adjust as necessary
     let estimated_records = (file_size / 100) as usize;
     // List of elements to build the tree structure
