@@ -326,6 +326,7 @@ fn parse_modifier(
 // extreme cases: !case:!file:"!"tmp  // double negation with query !tmp
 fn parse_condition(lexer: &mut lexer::QueryLexer, modifiers: QueryModifiersTracking) -> QueryExpr {
     if let Some(token) = lexer.next_token() {
+        let mut search_text = token.to_string();
         match token {
             lexer::QueryToken::Ident(ref ident) => {
                 // Check if next token is Colon for function
@@ -340,6 +341,11 @@ fn parse_condition(lexer: &mut lexer::QueryLexer, modifiers: QueryModifiersTrack
                     {
                         // If it's a modifier, update modifiers and continue
                         return parse_condition(lexer, new_modifiers);
+                    } else {
+                        // Otherwise, treat as text query
+                        // we consumed the Colon, so include it in the search text
+                        search_text.push(':');
+
                     }
                 }
                 // Otherwise, treat as text query
@@ -360,7 +366,7 @@ fn parse_condition(lexer: &mut lexer::QueryLexer, modifiers: QueryModifiersTrack
             }
         };
 
-        let mut search_text = token.to_string();
+        
         while let Some(next_token) = lexer.peek_token() {
             match next_token {
                 lexer::QueryToken::Whitespace | lexer::QueryToken::Or => break,
